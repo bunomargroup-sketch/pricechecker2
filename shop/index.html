@@ -674,7 +674,7 @@
     let cart = JSON.parse(localStorage.getItem('shop_cart') || '[]');
     let currentPage = 1;
     let perPage = 24;
-    let filteredProducts = [...PRODUCTS];
+    let filteredProducts = orderProducts(PRODUCTS);
 
     // ================== HELPERS ==================
     const $ = id => document.getElementById(id);
@@ -706,6 +706,49 @@
     }
     function firstImage(p) {
       return ((p.image_paths && p.image_paths.length) ? p.image_paths[0] : p.image);
+    }
+
+    const randomRanks = {};
+    function randFor(code) {
+      if (randomRanks[code] === undefined) randomRanks[code] = Math.random();
+      return randomRanks[code];
+    }
+    function hasUploadedPhoto(p) {
+      return Array.isArray(p.image_paths) && p.image_paths.length > 0;
+    }
+    function categoryOf(p) {
+      return p.main_category || p.category || 'أخرى';
+    }
+    function categorySort(a, b) {
+      if (a === 'ملحقات') return 1;
+      if (b === 'ملحقات') return -1;
+      return a.localeCompare(b, 'ar');
+    }
+    function interleaveByCategory(list) {
+      const groups = {};
+      list.forEach(p => {
+        const c = categoryOf(p);
+        (groups[c] || (groups[c] = [])).push(p);
+      });
+      Object.keys(groups).forEach(c => groups[c].sort((a,b) => randFor(a.code) - randFor(b.code)));
+      const cats = Object.keys(groups).sort(categorySort);
+      const out = [];
+      let added = true;
+      while (added) {
+        added = false;
+        cats.forEach(c => {
+          if (groups[c].length) {
+            out.push(groups[c].shift());
+            added = true;
+          }
+        });
+      }
+      return out;
+    }
+    function orderProducts(list) {
+      const withPhotos = list.filter(hasUploadedPhoto);
+      const withoutPhotos = list.filter(p => !hasUploadedPhoto(p));
+      return [...interleaveByCategory(withPhotos), ...interleaveByCategory(withoutPhotos)];
     }
 
     async function sb(path, opt = {}) {
@@ -750,7 +793,7 @@
       const onlyFeatured = $('filterFeatured').checked;
       const onlyStock = $('filterInStock').checked;
 
-      filteredProducts = PRODUCTS.filter(p => {
+      filteredProducts = orderProducts(PRODUCTS.filter(p => {
         const matchSearch = !q || [p.code, p.name, p.brand, p.model, p.category, p.main_category].join(' ').toLowerCase().includes(q);
         const matchCat = cat === 'all' || (p.main_category || p.category) === cat;
         const matchBrand = brand === 'all' || p.brand === brand;
@@ -758,7 +801,7 @@
         const matchFeat = !onlyFeatured || p.featured === 'yes';
         const matchStock = !onlyStock || p.active !== false;
         return matchSearch && matchCat && matchBrand && matchPrice && matchFeat && matchStock;
-      });
+      }));
 
       currentPage = 1;
       renderProducts();
@@ -772,7 +815,7 @@
       $('priceMax').value = '1500';
       $('filterFeatured').checked = false;
       $('filterInStock').checked = true;
-      filteredProducts = [...PRODUCTS];
+      filteredProducts = orderProducts(PRODUCTS);
       currentPage = 1;
       renderProducts();
     }
@@ -832,7 +875,7 @@
     function renderBestSellers() {
       const el = $('bestSellers');
       if (!el) return;
-      const sorted = [...PRODUCTS].sort((a,b) => b.price - a.price).slice(0, 8);
+      const sorted = orderProducts(PRODUCTS).slice(0, 8);
       el.innerHTML = sorted.map(p => `
         <article class="product">
           <div class="img-box" onclick="openProduct('${esc(p.code)}')">
@@ -1137,7 +1180,7 @@
 
     function init() {
       // Initial product data
-      filteredProducts = [...PRODUCTS];
+      filteredProducts = orderProducts(PRODUCTS);
 
       // Render everything
       populateFilters();
@@ -1156,7 +1199,7 @@
 
       // Load Supabase updates if available
       loadProductsFromSupabase().then(() => {
-        filteredProducts = [...PRODUCTS];
+        filteredProducts = orderProducts(PRODUCTS);
         renderProducts();
         renderCategoryCards();
       });
