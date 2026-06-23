@@ -329,7 +329,44 @@
     <div class="section-header">
       <h2>الأقسام الرئيسية</h2>
     </div>
-    <div class="cat-grid" id="mainCats"></div>
+    <div class="cat-grid" id="mainCats">
+      <div class="cat-card" onclick="filterByCategory('حوض مطبخ')">
+        <img src="assets/kitchen-modern-hero2.jpg" alt="حوض مطبخ">
+        <div class="overlay"></div>
+        <div class="cat-content"><h3>حوض مطبخ</h3><span>31 منتج</span></div>
+        <div class="explore">استكشف</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('حوض وجه')">
+        <img src="assets/faucets-collection.jpg" alt="حوض وجه">
+        <div class="overlay"></div>
+        <div class="cat-content"><h3>حوض وجه</h3><span>13 منتج</span></div>
+        <div class="explore">استكشف</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('خلاطات')">
+        <img src="assets/faucets-collection.jpg" alt="خلاطات">
+        <div class="overlay"></div>
+        <div class="cat-content"><h3>خلاطات</h3><span>31 منتج</span></div>
+        <div class="explore">استكشف</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('مرايا')">
+        <img src="assets/bathroom-luxury-hero.jpg" alt="مرايا">
+        <div class="overlay"></div>
+        <div class="cat-content"><h3>مرايا</h3><span>5 منتج</span></div>
+        <div class="explore">استكشف</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('مقاعد')">
+        <img src="assets/bathroom-luxury-hero.jpg" alt="مقاعد">
+        <div class="overlay"></div>
+        <div class="cat-content"><h3>مقاعد</h3><span>28 منتج</span></div>
+        <div class="explore">استكشف</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('ملحقات')">
+        <img src="assets/accessories-set.jpg" alt="ملحقات">
+        <div class="overlay"></div>
+        <div class="cat-content"><h3>ملحقات</h3><span>2 منتج</span></div>
+        <div class="explore">استكشف</div>
+      </div>
+    </div>
   </div>
 
   <!-- WHY US -->
@@ -353,7 +390,7 @@
     <div class="section-header">
       <h2>المنتجات</h2>
       <div style="display:flex; gap:10px; align-items:center;">
-        <span id="resultsCount" style="color:var(--muted); font-weight:700;"></span>
+        <span id="resultsCount" style="color:var(--muted); font-weight:700;">110 منتج</span>
         <button onclick="resetFilters()" class="btn btn-outline" style="padding:7px 16px; font-size:13px;">إعادة تعيين</button>
       </div>
     </div>
@@ -392,7 +429,392 @@
 
       <!-- Product Grid -->
       <div>
-        <div id="grid" class="grid"></div>
+        <div id="grid" class="grid">
+        <article class="product">
+          <div class="img-box" onclick="openProduct('RO10916')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/RO10916.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">RO10916</div>
+            <div class="name" onclick="openProduct('RO10916')">مسكر زاوية  &#x27;&#x27;1/2 * &#x27;&#x27;1/2 كروم</div>
+            <div class="meta">بن أمور • B.AMOR020 • حنفية</div>
+            <div class="price">30 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('RO10916')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('RO10916')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('VP20483')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/VP20483.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">VP20483</div>
+            <div class="name" onclick="openProduct('VP20483')">حوض وجه فوق الرخام أبيض -40*30 سم</div>
+            <div class="meta">ب.أمور • SH-8218A • حوض فوق الرخام</div>
+            <div class="price">200 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('VP20483')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('VP20483')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('VP20216')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/VP20216.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">VP20216</div>
+            <div class="name" onclick="openProduct('VP20216')">حوض وجه فوق الرخام ذهبي -48سم</div>
+            <div class="meta">ب.أمور • G340 • حوض فوق الرخام</div>
+            <div class="price">300 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('VP20216')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('VP20216')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('VP20484')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/VP20484.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">VP20484</div>
+            <div class="name" onclick="openProduct('VP20484')">حوض وجه فوق الرخام أبيض 41.5 سم</div>
+            <div class="meta">ب.أمور • SH-8221 • حوض فوق الرخام</div>
+            <div class="price">200 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('VP20484')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('VP20484')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('VP20215')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/VP20215.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">VP20215</div>
+            <div class="name" onclick="openProduct('VP20215')">حوض وجه فوق الرخام أبيض -50سم</div>
+            <div class="meta">ب.أمور • 8278 • حوض فوق الرخام</div>
+            <div class="price">225 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('VP20215')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('VP20215')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30857')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30857.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30857</div>
+            <div class="name" onclick="openProduct('EG30857')">حوض مطبخ جرانيت بيج 80*45 زوجي</div>
+            <div class="meta">ب.أمور • Vienna • حوض مطبخ جرانيت</div>
+            <div class="price">820 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30857')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30857')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30858')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30858.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30858</div>
+            <div class="name" onclick="openProduct('EG30858')">حوض مطبخ جرانيت أسود 80*45 زوجي</div>
+            <div class="meta">ب.أمور • Vienna • حوض مطبخ جرانيت</div>
+            <div class="price">820 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30858')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30858')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30859')">
+            <div class="badge">مميز</div>
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30859.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30859</div>
+            <div class="name" onclick="openProduct('EG30859')">حوض مطبخ جرانيت رصاصي 80*45 زوجي</div>
+            <div class="meta">ب.أمور • Vienna • حوض مطبخ جرانيت</div>
+            <div class="price">820 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30859')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30859')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30863')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30863.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30863</div>
+            <div class="name" onclick="openProduct('EG30863')">حوض مطبخ جرانيت أبيض مطفي79*51 فردي</div>
+            <div class="meta">ب.أمور • Jammel • حوض مطبخ جرانيت</div>
+            <div class="price">750 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30863')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30863')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30864')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30864.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30864</div>
+            <div class="name" onclick="openProduct('EG30864')">حوض مطبخ جرانيت بيج79*51 فردي</div>
+            <div class="meta">ب.أمور • Jammel • حوض مطبخ جرانيت</div>
+            <div class="price">750 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30864')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30864')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30865')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30865.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30865</div>
+            <div class="name" onclick="openProduct('EG30865')">حوض مطبخ جرانيت أسود مطفي79*51 فردي</div>
+            <div class="meta">ب.أمور • Jammel • حوض مطبخ جرانيت</div>
+            <div class="price">750 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30865')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30865')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30866')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30866.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30866</div>
+            <div class="name" onclick="openProduct('EG30866')">حوض مطبخ جرانيت رصاصي79*51 فردي</div>
+            <div class="meta">ب.أمور • Jammel • حوض مطبخ جرانيت</div>
+            <div class="price">750 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30866')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30866')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30867')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30867.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30867</div>
+            <div class="name" onclick="openProduct('EG30867')">حوض مطبخ جرانيت أبيض مطفي60*45 فردي</div>
+            <div class="meta">ب.أمور • Cedria • حوض مطبخ جرانيت</div>
+            <div class="price">640 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30867')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30867')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30868')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30868.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30868</div>
+            <div class="name" onclick="openProduct('EG30868')">حوض مطبخ جرانيت بيج60*45 فردي</div>
+            <div class="meta">ب.أمور • Cedria • حوض مطبخ جرانيت</div>
+            <div class="price">640 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30868')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30868')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30869')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30869.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30869</div>
+            <div class="name" onclick="openProduct('EG30869')">حوض مطبخ جرانيت أسود مطفي60*45 فردي</div>
+            <div class="meta">ب.أمور • Cedria • حوض مطبخ جرانيت</div>
+            <div class="price">640 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30869')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30869')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30870')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30870.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30870</div>
+            <div class="name" onclick="openProduct('EG30870')">حوض مطبخ جرانيت رصاصي60*45 فردي</div>
+            <div class="meta">ب.أمور • Cedria • حوض مطبخ جرانيت</div>
+            <div class="price">640 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30870')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30870')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30871')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30871.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30871</div>
+            <div class="name" onclick="openProduct('EG30871')">حوض مطبخ جرانيت رصاصي72*47 فردي</div>
+            <div class="meta">ب.أمور • Nice • حوض مطبخ جرانيت</div>
+            <div class="price">720 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30871')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30871')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30872')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30872.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30872</div>
+            <div class="name" onclick="openProduct('EG30872')">حوض مطبخ جرانيت أسود مطفي72*47 فردي</div>
+            <div class="meta">ب.أمور • Nice • حوض مطبخ جرانيت</div>
+            <div class="price">720 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30872')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30872')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30873')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30873.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30873</div>
+            <div class="name" onclick="openProduct('EG30873')">حوض مطبخ جرانيت بيج72*47 فردي</div>
+            <div class="meta">ب.أمور • Nice • حوض مطبخ جرانيت</div>
+            <div class="price">720 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30873')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30873')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30874')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30874.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30874</div>
+            <div class="name" onclick="openProduct('EG30874')">حوض مطبخ جرانيت أبيض ناصع 72*47 فردي</div>
+            <div class="meta">ب.أمور • Nice • حوض مطبخ جرانيت</div>
+            <div class="price">720 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30874')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30874')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30875')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30875.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30875</div>
+            <div class="name" onclick="openProduct('EG30875')">حوض مطبخ جرانيت أبيض مطفي72*47 فردي</div>
+            <div class="meta">ب.أمور • Nice • حوض مطبخ جرانيت</div>
+            <div class="price">720 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30875')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30875')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30876')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30876.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30876</div>
+            <div class="name" onclick="openProduct('EG30876')">حوض مطبخ جرانيت أسود مطفي80*50 فردي</div>
+            <div class="meta">ب.أمور • Zarmdine • حوض مطبخ جرانيت</div>
+            <div class="price">990 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30876')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30876')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30877')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30877.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30877</div>
+            <div class="name" onclick="openProduct('EG30877')">حوض مطبخ جرانيت بيج80*50 فردي</div>
+            <div class="meta">ب.أمور • Zarmdine • حوض مطبخ جرانيت</div>
+            <div class="price">990 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30877')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30877')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30878')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30878.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30878</div>
+            <div class="name" onclick="openProduct('EG30878')">حوض مطبخ جرانيت أسود مطفي50*43 فردي</div>
+            <div class="meta">ب.أمور • Tallinn • حوض مطبخ جرانيت</div>
+            <div class="price">600 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30878')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30878')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        </div>
         <div id="pager" style="margin-top:24px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;"></div>
       </div>
     </div>
@@ -403,7 +825,136 @@
     <div class="section-header">
       <h2>الأكثر مبيعاً</h2>
     </div>
-    <div id="bestSellers" class="grid"></div>
+    <div id="bestSellers" class="grid">
+        <article class="product">
+          <div class="img-box" onclick="openProduct('WP20477')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/WP20477.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">WP20477</div>
+            <div class="name" onclick="openProduct('WP20477')">مقعد أرضي ملحوم مربع قصير أبيض</div>
+            <div class="meta">ب.أمور • SH-805 • مقعد أرضي</div>
+            <div class="price">1,150 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('WP20477')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('WP20477')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30876')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30876.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30876</div>
+            <div class="name" onclick="openProduct('EG30876')">حوض مطبخ جرانيت أسود مطفي80*50 فردي</div>
+            <div class="meta">ب.أمور • Zarmdine • حوض مطبخ جرانيت</div>
+            <div class="price">990 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30876')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30876')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EG30877')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EG30877.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EG30877</div>
+            <div class="name" onclick="openProduct('EG30877')">حوض مطبخ جرانيت بيج80*50 فردي</div>
+            <div class="meta">ب.أمور • Zarmdine • حوض مطبخ جرانيت</div>
+            <div class="price">990 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EG30877')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EG30877')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('EL10702')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/EL10702.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">EL10702</div>
+            <div class="name" onclick="openProduct('EL10702')">حوض مطبخ ستانلس ستيل منظومة بيانو 304 75*46 أسود</div>
+            <div class="meta">بن أمور • 7546-B • حوض مطبخ ستانلس ستيل</div>
+            <div class="price">950 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('EL10702')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('EL10702')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('WP20161')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/WP20161.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">WP20161</div>
+            <div class="name" onclick="openProduct('WP20161')">مقعد أرضي ملحوم رصاصي رخامي</div>
+            <div class="meta">ب.أمور • SH-295-MSL • مقعد أرضي</div>
+            <div class="price">950 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('WP20161')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('WP20161')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('WP20587')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/WP20587.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">WP20587</div>
+            <div class="name" onclick="openProduct('WP20587')">مقعد أرضي ملحوم أسود</div>
+            <div class="meta">ب.أمور • SH-295B • مقعد أرضي</div>
+            <div class="price">950 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('WP20587')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('WP20587')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('WP20478')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/WP20478.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">WP20478</div>
+            <div class="name" onclick="openProduct('WP20478')">مقعد أرضي ملحوم ذهبي مخطط</div>
+            <div class="meta">ب.أمور • SH-295PGL • مقعد أرضي</div>
+            <div class="price">900 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('WP20478')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('WP20478')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="img-box" onclick="openProduct('WS10818')">
+            
+            <img src="https://kkqbkumobeimwuscxztu.supabase.co/storage/v1/object/public/product-images/WS10818.jpg" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+          </div>
+          <div class="body">
+            <div class="code">WS10818</div>
+            <div class="name" onclick="openProduct('WS10818')">مقعد معلق كبير بلس سايز ملحوم تورنيدو أبيض</div>
+            <div class="meta">ب.أمور • LT-131E-UQ3 • مقعد معلق</div>
+            <div class="price">900 د.ل</div>
+            <div class="actions">
+              <button class="add-btn" onclick="event.stopImmediatePropagation(); addToCart('WS10818')">أضف للسلة</button>
+              <button class="view-btn" onclick="event.stopImmediatePropagation(); openProduct('WS10818')">تفاصيل</button>
+            </div>
+          </div>
+        </article>
+    </div>
   </div>
 
   <!-- PROJECT SHOWCASE -->
