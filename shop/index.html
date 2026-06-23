@@ -208,6 +208,15 @@
     @keyframes softFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
     @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.reveal,.reveal.visible,.hero-content,.heroVisual,.premiumHero .heroIn>*{animation:none;transition:none;opacity:1;transform:none}.product:hover,.guideCard:hover,.promoBlock:hover,.contact-card:hover,.map-card:hover,.brand-logo-card:hover,.mainCat:hover,.btn:hover,.add:hover,.add-btn:hover,.view-btn:hover,.cartBtn:hover,.heroPrimary:hover,.heroSecondary:hover,.promoBtn:hover,.pageBtn:hover,.cat:hover,.detailAdd:hover,.submit:hover{transform:none;box-shadow:none}}
     
+  
+    .about-box{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px;padding:30px;position:relative;overflow:hidden}
+    .about-box:before{content:'';position:absolute;inset:auto -80px -90px auto;width:240px;height:240px;background:rgba(90,124,255,.08);border-radius:50%}
+    .about-box h2{margin:0 0 14px;color:var(--primary);font-size:30px;font-weight:900}
+    .about-box p{color:#475569;line-height:2;font-weight:700;margin:0 0 14px;position:relative;z-index:1}
+    .features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;position:relative;z-index:1}
+    .feature{background:#F8FAFC;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--primary);font-weight:900}
+    @media(max-width:760px){.about-box{padding:22px}.about-box h2{font-size:24px}.features{grid-template-columns:1fr 1fr}.nav-actions .btn-outline{display:none}}
+    
   </style>
 </head>
 <body>
@@ -228,6 +237,7 @@
       
       <div class="nav-actions">
         <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" class="btn btn-outline">المنتجات</button>
+        <button onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" class="btn btn-outline">من نحن</button>
         <button onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})" class="btn btn-outline">مشاريعنا</button>
         <div onclick="showCart()" class="cart-btn">
           <span>🛒</span> 
@@ -263,6 +273,24 @@
       </div>
     </div>
   </section>
+
+  <!-- ABOUT US -->
+  <section class="section" id="about" style="padding-top:32px; padding-bottom:24px;">
+    <div class="about-box">
+      <div class="section-kicker">ABOUT BEN OMAR</div>
+      <h2>من نحن</h2>
+      <p>مجموعة بن عمر لمواد البناء والمواد الصحية توفر تشكيلة واسعة ومتنوعة من منتجات وتجهيزات الحمامات والمطابخ، حيث تضم مجموعة متكاملة من الخلاطات، والأحواض، والمراحيض، ومقاعد الحمامات، وأنظمة الدش، بالإضافة إلى الإكسسوارات العصرية والمرايا بمختلف الأحجام والتصاميم. نحرص على اختيار منتجات تجمع بين الجودة العالية والمتانة والتصميم الأنيق لتلبية احتياجات الأفراد والمقاولين وأصحاب المشاريع السكنية والتجارية.</p>
+      <p>كما نضع خبرتنا العملية في خدمة عملائنا من خلال تقديم الاستشارات والنصائح الفنية التي تساعدهم على اختيار المنتجات الأنسب لمتطلباتهم وميزانياتهم، سواء كانوا يقومون ببناء منزل جديد أو تجديد وتجهيز مشروع قائم. ونعمل باستمرار على توفير أحدث التصاميم والابتكارات في مجال الأدوات الصحية وتجهيزات المطابخ، مع التركيز على الحلول العملية التي تجمع بين الأداء المتميز وسهولة الاستخدام والمظهر العصري.</p>
+      <p>في مجموعة بن عمر، نؤمن بأن جودة التفاصيل تصنع الفرق، لذلك نسعى إلى توفير منتجات موثوقة من مصادر معتمدة تلبي أعلى معايير الجودة، مع الالتزام بخدمة عملاء متميزة وأسعار تنافسية. هدفنا هو أن نكون الشريك الموثوق لكل من يبحث عن تجهيزات حمامات ومطابخ تجمع بين الأناقة والعملية والقيمة الممتازة، وتساهم في إنجاز المشاريع بأفضل صورة ممكنة.</p>
+      <div class="features">
+        <div class="feature">منتجات عصرية</div>
+        <div class="feature">خبرة عملية</div>
+        <div class="feature">نصيحة للعميل</div>
+        <div class="feature">تجهيز مشاريع</div>
+      </div>
+    </div>
+  </section>
+
 
   <!-- VISUAL CONTENT -->
   <div class="section" style="padding-top: 20px; padding-bottom: 10px;">
@@ -468,8 +496,8 @@
           </div>
           <div class="map-card">
             <h4>فرع السراج</h4>
-            <iframe src="https://www.google.com/maps?q=32.8264142,13.0815409&z=17&output=embed" loading="lazy" allowfullscreen></iframe>
-            <a href="https://maps.app.goo.gl/Y2xjkhbk1dzUkMRx9" target="_blank">فتح الموقع في Google Maps</a>
+            <iframe src="https://www.google.com/maps?q=32.8264142,13.0815409&z=19&output=embed" loading="lazy" allowfullscreen></iframe>
+            <a href="https://maps.app.goo.gl/fhiP4A42qTpspMEs8" target="_blank">فتح الموقع في Google Maps</a>
           </div>
         </div>
       </div>
@@ -1171,7 +1199,7 @@
     // Boot
     window.onload = function(){ init(); setTimeout(initRevealAnimations, 80); };
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a104e2db0ee7794c',t:'MTc4MjIzMjMxOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html
   <section class="brands-section" id="brands">
     <div class="brands-box">
