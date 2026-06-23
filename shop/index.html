@@ -217,6 +217,8 @@
     .feature{background:#F8FAFC;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--primary);font-weight:900}
     @media(max-width:760px){.about-box{padding:22px}.about-box h2{font-size:24px}.features{grid-template-columns:1fr 1fr}.nav-actions .btn-outline{display:none}}
     
+  
+    .product,.cat-card{opacity:1!important;visibility:visible!important;transform:none!important}
   </style>
 </head>
 <body>
@@ -862,6 +864,7 @@
         </article>
       `).join('') || '<div style="padding:40px 0;text-align:center;color:#64748b;">لا توجد منتجات مطابقة</div>';
 
+      document.querySelectorAll('.product').forEach(el => { el.classList.remove('reveal'); el.classList.add('visible'); });
       renderPager(total);
       renderBestSellers();
     }
@@ -942,6 +945,7 @@
             <div class="explore">استكشف</div>
           </div>`;
       }).join('');
+      document.querySelectorAll('.cat-card').forEach(el => { el.classList.remove('reveal'); el.classList.add('visible'); });
     }
 
     function filterByCategory(cat) {
