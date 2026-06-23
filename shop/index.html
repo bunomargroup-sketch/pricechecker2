@@ -56,7 +56,7 @@
     
     /* HERO */
     .hero { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color: #fff; position: relative; overflow: hidden; min-height: 620px; display: flex; align-items: center; }
-    .hero::after { content: ''; position: absolute; inset: 0; background: url('assets/home-hero.jpg') center/cover no-repeat; opacity: 0.75; z-index: 1; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: url('assets/bathroom-luxury-hero.jpg') center/cover no-repeat; opacity: 0.82; z-index: 1; }
     .hero-inner { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; padding: 80px 24px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
     .hero-content h1 { font-size: 42px; line-height: 1.1; font-weight: 800; margin: 0 0 16px; letter-spacing: -1.5px; }
     .hero-content .lead { font-size: 18px; line-height: 1.55; color: #CBD5E1; max-width: 520px; margin-bottom: 28px; }
@@ -259,16 +259,20 @@
       </div>
       <div class="visual-grid">
         <div class="visual-card">
-          <img src="assets/home-hero.jpg" alt="حمامات فاخرة">
+          <img src="assets/bathroom-luxury-hero.jpg" alt="حمامات فاخرة">
           <div class="label"><h3>حمامات فاخرة</h3></div>
         </div>
         <div class="visual-card">
-          <img src="assets/kitchen-sink-modern-hero.png" alt="مطابخ عصرية">
+          <img src="assets/kitchen-modern-hero2.jpg" alt="مطابخ عصرية">
           <div class="label"><h3>مطابخ عصرية</h3></div>
         </div>
         <div class="visual-card">
-          <img src="assets/home-hero.jpg" style="filter: saturate(1.1);" alt="خلاطات وأحواض">
+          <img src="assets/faucets-collection.jpg" alt="خلاطات وأحواض">
           <div class="label"><h3>خلاطات وأحواض</h3></div>
+        </div>
+        <div class="visual-card">
+          <img src="assets/accessories-set.jpg" alt="إكسسوارات الحمام">
+          <div class="label"><h3>إكسسوارات فاخرة</h3></div>
         </div>
       </div>
     </div>
@@ -364,10 +368,10 @@
     </div>
     
     <div class="masonry" style="margin-top:10px;">
-      <div class="masonry-item"><img src="assets/home-hero.jpg" alt="مشروع حمام سكني"><div class="cap">حمامات فيلا فاخرة — طرابلس</div></div>
-      <div class="masonry-item"><img src="assets/kitchen-sink-modern-hero.png" alt="مطبخ عصري"><div class="cap">مطبخ كامل — مشروع سكني 120 وحدة</div></div>
-      <div class="masonry-item"><img src="assets/home-hero.jpg" alt="مشروع فندقي"><div class="cap">حمامات فندق 5 نجوم — بنغازي</div></div>
-      <div class="masonry-item"><img src="assets/kitchen-sink-modern-hero.png" alt="مشروع تجاري"><div class="cap">مطابخ مطاعم وكافيهات</div></div>
+      <div class="masonry-item"><img src="assets/project-residential.jpg" alt="مشروع حمام سكني"><div class="cap">حمامات فيلا فاخرة — طرابلس</div></div>
+      <div class="masonry-item"><img src="assets/project-commercial.jpg" alt="مشروع فندقي"><div class="cap">حمامات فندق 5 نجوم — بنغازي</div></div>
+      <div class="masonry-item"><img src="assets/kitchen-modern-hero2.jpg" alt="مطبخ عصري"><div class="cap">مطبخ كامل — مشروع سكني 120 وحدة</div></div>
+      <div class="masonry-item"><img src="assets/project-residential.jpg" alt="مشروع تجاري"><div class="cap">مطابخ مطاعم وكافيهات</div></div>
     </div>
   </div>
 
@@ -803,7 +807,15 @@
       });
 
       container.innerHTML = ordered.map(cat => {
-        const img = (cat.includes('حوض')) ? 'assets/home-hero.jpg' : (cat.includes('مطبخ')) ? 'assets/kitchen-sink-modern-hero.png' : 'assets/home-hero.jpg';
+        let img = 'assets/bathroom-luxury-hero.jpg';
+        const c = cat.toLowerCase();
+        if (c.includes('مطبخ')) img = 'assets/kitchen-modern-hero2.jpg';
+        else if (c.includes('خلاط')) img = 'assets/faucets-collection.jpg';
+        else if (c.includes('ملحقات')) img = 'assets/accessories-set.jpg';
+        else if (c.includes('مرايا')) img = 'assets/bathroom-luxury-hero.jpg';
+        else if (c.includes('مقعد')) img = 'assets/project-residential.jpg';
+        else if (c.includes('حوض')) img = 'assets/faucets-collection.jpg';
+        else img = 'assets/bathroom-luxury-hero.jpg';
         return `
           <div class="cat-card" onclick="filterByCategory('${esc(cat)}')">
             <img src="${img}" alt="${esc(cat)}">
@@ -1112,5 +1124,5 @@
     // Boot
     window.onload = init;
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1041dd8197dca01',t:'MTc4MjIyNDI0OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
