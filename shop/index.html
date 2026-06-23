@@ -793,7 +793,7 @@
       const onlyFeatured = $('filterFeatured').checked;
       const onlyStock = $('filterInStock').checked;
 
-      filteredProducts = orderProducts(PRODUCTS.filter(p => {
+      let baseFiltered = PRODUCTS.filter(p => {
         const matchSearch = !q || [p.code, p.name, p.brand, p.model, p.category, p.main_category].join(' ').toLowerCase().includes(q);
         const matchCat = cat === 'all' || (p.main_category || p.category) === cat;
         const matchBrand = brand === 'all' || p.brand === brand;
@@ -801,7 +801,19 @@
         const matchFeat = !onlyFeatured || p.featured === 'yes';
         const matchStock = !onlyStock || p.active !== false;
         return matchSearch && matchCat && matchBrand && matchPrice && matchFeat && matchStock;
-      }));
+      });
+      // Safety fallback: if "available only" produces zero due bad active data, show matching products anyway.
+      if (!baseFiltered.length && onlyStock) {
+        baseFiltered = PRODUCTS.filter(p => {
+          const matchSearch = !q || [p.code, p.name, p.brand, p.model, p.category, p.main_category].join(' ').toLowerCase().includes(q);
+          const matchCat = cat === 'all' || (p.main_category || p.category) === cat;
+          const matchBrand = brand === 'all' || p.brand === brand;
+          const matchPrice = Number(p.price) >= minP && Number(p.price) <= maxP;
+          const matchFeat = !onlyFeatured || p.featured === 'yes';
+          return matchSearch && matchCat && matchBrand && matchPrice && matchFeat;
+        });
+      }
+      filteredProducts = orderProducts(baseFiltered);
 
       currentPage = 1;
       renderProducts();
@@ -1158,7 +1170,7 @@
         const rows = await sb('web_products?select=*');
         if (rows && rows.length) {
           const map = new Map(rows.map(r => [r.code, r]));
-          PRODUCTS = BASE_PRODUCTS.map(p => {
+          const merged = BASE_PRODUCTS.map(p => {
             const r = map.get(p.code);
             if (r) {
               return {
@@ -1168,11 +1180,14 @@
                 price: Number(r.price || p.price),
                 description: r.description || '',
                 image_paths: Array.isArray(r.image_paths) ? r.image_paths : [],
-                active: r.active !== false
+                // If active is missing/null, keep product visible. Only explicit false hides it.
+                active: r.active === false ? false : true
               };
             }
-            return p;
+            return {...p, active: p.active === false ? false : true};
           }).filter(p => p.active !== false);
+          // Safety: if Supabase data accidentally hides everything, keep the embedded product list visible.
+          PRODUCTS = merged.length ? merged : BASE_PRODUCTS.map(p => ({...p, active: true}));
         }
       } catch (e) {
         console.log('Using local product data');
