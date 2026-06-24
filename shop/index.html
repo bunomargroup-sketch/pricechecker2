@@ -1258,7 +1258,22 @@
       return IMAGE_BASE + String(path).split('/').map(encodeURIComponent).join('/');
     }
     function firstImage(p) {
-      return ((p.image_paths && p.image_paths.length) ? p.image_paths[0] : p.image);
+      return ((p.image_paths && p.image_paths.length) ? p.image_paths[0] : categoryAsset(p));
+    }
+    function categoryAsset(p) {
+      const c = String(p.main_category || p.category || '').toLowerCase();
+      if (c.includes('مطبخ')) return 'assets/kitchen-modern-hero2.jpg';
+      if (c.includes('خلاط')) return 'assets/faucets-collection.jpg';
+      if (c.includes('مرايا')) return 'assets/bathroom-luxury-hero.jpg';
+      if (c.includes('مقعد')) return 'assets/project-residential.jpg';
+      if (c.includes('ملحقات')) return 'assets/accessories-set.jpg';
+      if (c.includes('حوض')) return 'assets/faucets-collection.jpg';
+      return 'assets/bathroom-luxury-hero.jpg';
+    }
+    function imageSrc(path) {
+      if (!path) return 'assets/bathroom-luxury-hero.jpg';
+      if (String(path).startsWith('assets/') || String(path).startsWith('http') || String(path).startsWith('data:')) return path;
+      return imgUrl(path);
     }
 
     const randomRanks = {};
@@ -1400,7 +1415,7 @@
         <article class="product">
           <div class="img-box" onclick="openProduct('${esc(p.code)}')">
             ${p.featured === 'yes' ? `<div class="badge">مميز</div>` : ''}
-            <img src="${imgUrl(firstImage(p))}" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+            <img src="${imageSrc(firstImage(p))}" loading="lazy" onerror="this.src='${categoryAsset(p)}';">
           </div>
           <div class="body">
             <div class="code">${esc(p.code)}</div>
@@ -1446,7 +1461,7 @@
       el.innerHTML = sorted.map(p => `
         <article class="product">
           <div class="img-box" onclick="openProduct('${esc(p.code)}')">
-            <img src="${imgUrl(firstImage(p))}" loading="lazy" onerror="this.src='https://picsum.photos/id/1015/400/400';">
+            <img src="${imageSrc(firstImage(p))}" loading="lazy" onerror="this.src='${categoryAsset(p)}';">
           </div>
           <div class="body">
             <div class="code">${esc(p.code)}</div>
@@ -1511,7 +1526,7 @@
       const p = PRODUCTS.find(x => x.code === code);
       if (!p) return;
 
-      const imgs = [...(p.image_paths || []), p.image].filter(Boolean);
+      const imgs = ((p.image_paths && p.image_paths.length) ? p.image_paths : [categoryAsset(p)]).filter(Boolean);
       const related = PRODUCTS.filter(x => x.code !== p.code && (x.main_category || x.category) === (p.main_category || p.category)).slice(0, 4);
 
       const html = `
@@ -1522,10 +1537,10 @@
         <div class="detail-body">
           <div>
             <div class="main-photo">
-              <img id="mainImg" src="${imgUrl(imgs[0])}" style="width:100%;height:100%;object-fit:cover;">
+              <img id="mainImg" src="${imageSrc(imgs[0])}" style="width:100%;height:100%;object-fit:cover;">
             </div>
             <div class="thumbs">
-              ${imgs.map((path, i) => `<img class="thumb ${i===0?'active':''}" src="${imgUrl(path)}" onclick="switchMainImg('${imgUrl(path)}', this)">`).join('')}
+              ${imgs.map((path, i) => `<img class="thumb ${i===0?'active':''}" src="${imageSrc(path)}" onclick="switchMainImg('${imageSrc(path)}', this)">`).join('')}
             </div>
           </div>
           <div>
@@ -1810,8 +1825,45 @@
       targets.forEach(el => observer.observe(el));
     }
     
+
+    function robustShopClickHandler(e) {
+      const addBtn = e.target.closest('.add-btn');
+      if (addBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const card = addBtn.closest('.product');
+        const code = addBtn.getAttribute('onclick')?.match(/addToCart\('([^']+)'\)/)?.[1] || card?.querySelector('.code')?.textContent?.trim();
+        if (code) addToCart(code);
+        return;
+      }
+      const viewBtn = e.target.closest('.view-btn');
+      if (viewBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const card = viewBtn.closest('.product');
+        const code = viewBtn.getAttribute('onclick')?.match(/openProduct\('([^']+)'\)/)?.[1] || card?.querySelector('.code')?.textContent?.trim();
+        if (code) openProduct(code);
+        return;
+      }
+      const imgBox = e.target.closest('.img-box');
+      if (imgBox) {
+        const card = imgBox.closest('.product');
+        const code = card?.querySelector('.code')?.textContent?.trim();
+        if (code) openProduct(code);
+        return;
+      }
+      const name = e.target.closest('.product .name');
+      if (name) {
+        const card = name.closest('.product');
+        const code = card?.querySelector('.code')?.textContent?.trim();
+        if (code) openProduct(code);
+        return;
+      }
+    }
+    document.addEventListener('click', robustShopClickHandler, true);
+
     // Boot
     window.onload = function(){ init(); setTimeout(initRevealAnimations, 80); };
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a105a798ce12a10c',t:'MTc4MjI0MDM3Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a10a00d9fc8b794b',t:'MTc4MjI4NTk3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
