@@ -24,6 +24,12 @@ create table if not exists web_products (
   updated_at timestamptz default now()
 );
 
+
+-- Extra dynamic product columns
+alter table web_products add column if not exists main_category text;
+alter table web_products add column if not exists featured boolean default false;
+alter table web_products add column if not exists cost numeric default 0;
+
 alter table web_products enable row level security;
 
 drop policy if exists "Public read web products" on web_products;
@@ -91,6 +97,7 @@ alter table web_order_items enable row level security;
 
 drop policy if exists "Public insert web orders" on web_orders;
 drop policy if exists "Public read web orders" on web_orders;
+drop policy if exists "Public update web orders" on web_orders;
 drop policy if exists "Public insert web order items" on web_order_items;
 drop policy if exists "Public read web order items" on web_order_items;
 
@@ -105,6 +112,13 @@ on web_orders
 for select
 to anon
 using (true);
+
+create policy "Public update web orders"
+on web_orders
+for update
+to anon
+using (true)
+with check (true);
 
 create policy "Public insert web order items"
 on web_order_items
