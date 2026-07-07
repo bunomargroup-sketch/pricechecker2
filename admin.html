@@ -207,7 +207,7 @@
     function save(k,v){localStorage.setItem('benomar_'+k,JSON.stringify(v));}
     function norm(s){return String(s||'').toLowerCase().replace(/[ً-ٰٟ]/g,'').replace(/ـ/g,'').replace(/[إأآا]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();}
     function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
-    function price(n){return pf.format(Number(n||0));} function marginInfo(p,sell){const cost=Number(p.cost||0), s=Number(sell||p.price||0); const m=s-cost; const r=s>0?(m/s*100):0; return {cost,margin:m,rate:r};} function marginMini(p,sell){const m=marginInfo(p,sell); if(!m.cost)return ''; return `ه.ر ${Math.round(m.rate)}% ${price(m.margin)}د`;}
+    function price(n){return pf.format(Number(n||0));} function marginInfo(p,sell){const cost=Number(p.cost||0), s=Number(sell||p.price||0); const m=s-cost; const r=cost>0?(m/cost*100):0; return {cost,margin:m,rate:r};} function marginMini(p,sell){const m=marginInfo(p,sell); if(!m.cost)return ''; return `ه.ر ${Math.round(m.rate)}% ${price(m.margin)}د`;}
     function hay(p){return norm([p.code,p.name,p.brand,p.model].join(' '));}
     function inputs(){return Array.from(document.querySelectorAll('.search-input'));}
     function getTerms(){const out=[];inputs().forEach(input=>norm(input.value).split(' ').filter(Boolean).forEach(t=>out.push(t)));return out;}
