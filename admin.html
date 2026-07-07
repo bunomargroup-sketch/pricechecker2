@@ -202,7 +202,7 @@
     const RAW_DATA=load('customProducts',DATA);
     const products=RAW_DATA.map(p=>({code:String(p.code||'').trim().toUpperCase(),name:String(p.name||'بدون اسم').trim()||'بدون اسم',brand:String(p.brand||'').trim(),model:String(p.model||'').trim(),price:Number(p.price||0),cost:Number(p.cost||0)})).sort((a,b)=>b.price-a.price||a.code.localeCompare(b.code));
     const byCode=new Map(products.map(p=>[p.code,p]));
-    let current=products.slice(); let chosen=null; let appUser=load('appUser',null); if(typeof appUser==='string'){try{appUser=JSON.parse(appUser)}catch(e){appUser=null}} if(appUser&&(!appUser.id||!appUser.identifier))appUser=null; let cart=load('cart',[]); let currentSavedCartId=load('currentSavedCartId',null); let currentCloudCartId=load('currentCloudCartId',null); let cloudCarts=load('cloudCarts',[]); let cartDiscount=Number(load('cartDiscount',0))||0; let cartCustomer=load('cartCustomer',{name:'',phone:'',notes:''}); let savedCarts=load('savedCarts',[]); let history=load('history',[]); let histTimer=null;
+    let current=products.slice(); let chosen=null; let appUser=load('appUser',null); let authSession=load('authSession',null); if(typeof appUser==='string'){try{appUser=JSON.parse(appUser)}catch(e){appUser=null}} if(appUser&&(!appUser.id||!appUser.identifier))appUser=null; let cart=load('cart',[]); let currentSavedCartId=load('currentSavedCartId',null); let currentCloudCartId=load('currentCloudCartId',null); let cloudCarts=load('cloudCarts',[]); let cartDiscount=Number(load('cartDiscount',0))||0; let cartCustomer=load('cartCustomer',{name:'',phone:'',notes:''}); let savedCarts=load('savedCarts',[]); let history=load('history',[]); let histTimer=null;
     function load(k,d){try{return JSON.parse(localStorage.getItem('benomar_'+k)||JSON.stringify(d));}catch(e){return d;}}
     function save(k,v){localStorage.setItem('benomar_'+k,JSON.stringify(v));}
     function norm(s){return String(s||'').toLowerCase().replace(/[ً-ٰٟ]/g,'').replace(/ـ/g,'').replace(/[إأآا]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();}
@@ -240,76 +240,11 @@
     function renderCart(){let subtotal=0,count=0; els.cartList.innerHTML=cart.map(x=>{const p=byCode.get(x.code); if(!p)return ''; const u=unitPrice(x,p); const line=u*x.qty; subtotal+=line; count+=x.qty; return `<div class="cart-item"><div class="cart-main" data-open="${esc(p.code)}"><div class="cart-code">${esc(p.code)}</div><div class="cart-name">${esc(p.name)}</div><div class="cart-meta">${esc([p.brand,p.model].filter(Boolean).join(' — '))}</div><div class="cart-controls"><button class="qty-btn" data-qty="${esc(p.code)}" data-d="-1">−</button><span class="qty">${x.qty}</span><button class="qty-btn" data-qty="${esc(p.code)}" data-d="1">+</button><button class="del-btn" data-qty="${esc(p.code)}" data-d="-999">حذف</button></div></div><div class="cart-price"><input class="price-edit" data-price-code="${esc(p.code)}" type="number" step="0.01" min="0" value="${u}"><div class="line-total">${price(line)} د.ل</div><div class="margin-mini">${marginMini(p,u)}</div></div></div>`;}).join('') || '<div class="empty">السلة فارغة</div>'; const disc=Math.max(0,Math.min(100,Number(cartDiscount)||0)); const discAmount=subtotal*disc/100; const total=Math.max(0,subtotal-discAmount); if(els.discountInput) els.discountInput.value=disc; els.cartSubtotal.textContent=price(subtotal)+' د.ل'; els.discountAmount.textContent=price(discAmount)+' د.ل'; els.cartTotal.textContent=price(total)+' د.ل'; const mt=cartTotals(); els.cartMarginTotal.textContent=mt.totalCost?'ه.ر '+Math.round(mt.marginRate)+'% '+price(mt.margin)+'د':''; els.cartCountText.textContent=nf.format(count)+' قطعة'; els.cartNavBadge.textContent=count?(nf.format(count)+' | '+price(total)):'0'; els.cartNavBadge.style.display=count?'flex':'none';}
     function cartTotals(){let subtotal=0,count=0,totalCost=0; cart.forEach(x=>{const p=byCode.get(x.code); if(!p)return; subtotal+=unitPrice(x,p)*x.qty; totalCost+=(Number(p.cost||0)*x.qty); count+=x.qty;}); const disc=Math.max(0,Math.min(100,Number(cartDiscount)||0)); const discountAmount=subtotal*disc/100; const total=Math.max(0,subtotal-discountAmount); const margin=total-totalCost; const marginRate=total>0?(margin/total*100):0; return {subtotal,discount:disc,discountAmount,total,count,totalCost,margin,marginRate};}
     function copyCartText(){if(!cart.length) return toast('السلة فارغة'); navigator.clipboard?.writeText(cartText()).then(()=>toast('تم نسخ القائمة')).catch(()=>toast(cartText()));}
-    async function sbRequest(path,opt={}){
-        const token = (appUser && appUser.access_token) ? appUser.access_token : SUPABASE_KEY;
-        const res = await fetch(SUPABASE_URL+'/rest/v1/'+path,{
-            ...opt,
-            headers:{
-                apikey: SUPABASE_KEY,
-                Authorization: 'Bearer ' + token,
-                'Content-Type': 'application/json',
-                Prefer: 'return=representation',
-                ...(opt.headers||{})
-            }
-        });
-        if(!res.ok){throw new Error(await res.text());}
-        if(res.status===204)return null;
-        return await res.json();
-    }
+    function staffEmail(id){return String(id||'').trim().toLowerCase()+'@staff.internal'} async function authSignIn(identifier,code){const res=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:staffEmail(identifier),password:code})}); const data=await res.json().catch(()=>({})); if(!res.ok)throw new Error(data.error_description||data.msg||data.message||'auth failed'); authSession=data; save('authSession',authSession); return data.user} async function requireAdmin(){try{if(!authSession?.access_token)return false; const rows=await sbRequest('staff_roles?select=role&user_id=eq.'+authSession.user.id); return rows&&rows[0]&&rows[0].role==='admin'}catch(e){return false}} async function sbRequest(path,opt={}){const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...opt,headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+((authSession&&authSession.access_token)||SUPABASE_KEY),'Content-Type':'application/json',Prefer:'return=representation',...(opt.headers||{})}}); if(!res.ok){throw new Error(await res.text());} if(res.status===204)return null; return await res.json();}
     async function sbRpc(name,body){const res=await fetch(SUPABASE_URL+'/rest/v1/rpc/'+name,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)}); if(!res.ok)throw new Error(await res.text()); return await res.json();}
-    function updateLoginUI(){const logged=!!(appUser&&appUser.id); els.loginScreen.classList.toggle('hidden',logged); els.userPill.style.display=logged?'flex':'none'; els.currentUserLabel.textContent=logged?appUser.identifier:'';}
-    async function loginUser(create=false){
-        const identifier = els.loginIdentifier.value.trim().toLowerCase();
-        const code = els.loginCode.value.trim();
-        if(identifier.length<2 || code.length<3) return toast('اكتب المعرّف والكود');
-        try {
-            // Sign in using Supabase Auth signInWithPassword
-            const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
-                method: 'POST',
-                headers: {
-                    apikey: SUPABASE_KEY,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: identifier + '@staff.internal',
-                    password: code
-                })
-            });
-            if (!res.ok) throw new Error('Auth failed');
-            const data = await res.json();
-            
-            // Check role from staff_roles table
-            const roleToken = data.access_token;
-            const roleRes = await fetch(SUPABASE_URL + '/rest/v1/staff_roles?select=role', {
-                headers: {
-                    apikey: SUPABASE_KEY,
-                    Authorization: 'Bearer ' + roleToken
-                }
-            });
-            const roles = await roleRes.json();
-            const userRole = roles && roles[0] ? roles[0].role : 'seller';
-            
-            if (userRole !== 'admin') {
-                toast('غير مصرح لك بدخول صفحة المدير');
-                return;
-            }
-
-            appUser = {
-                id: data.user.id,
-                identifier: identifier,
-                access_token: data.access_token,
-                role: userRole
-            };
-            save('appUser', appUser);
-            updateLoginUI();
-            await loadCloudCarts(true);
-            toast('تم الدخول بنجاح');
-        } catch(e) {
-            console.error(e);
-            toast('المعرّف أو الكود غير صحيح أو حسابك غير مصرح له');
-        }
-    }
-    function logoutUser(){appUser=null; save('appUser',appUser); currentCloudCartId=null; save('currentCloudCartId',currentCloudCartId); cloudCarts=[]; renderSavedCarts(); updateLoginUI();}
+    function updateLoginUI(){const logged=!!(appUser&&appUser.id&&authSession&&authSession.access_token); els.loginScreen.classList.toggle('hidden',logged); els.userPill.style.display=logged?'flex':'none'; els.currentUserLabel.textContent=logged?appUser.identifier:'';}
+    async function loginUser(create=false){const identifier=els.loginIdentifier.value.trim().toLowerCase(); const code=els.loginCode.value.trim(); if(identifier.length<2||code.length<3)return toast('اكتب المعرّف والكود'); try{const user=await authSignIn(identifier,code); appUser={id:user.id,identifier}; save('appUser',appUser); const ok=await requireAdmin(); if(!ok){appUser=null;authSession=null;save('appUser',appUser);save('authSession',authSession);updateLoginUI();return toast('غير مصرح لك بدخول هذه الصفحة');} updateLoginUI(); await loadCloudCarts(true); toast('تم الدخول');}catch(e){console.error(e); toast(create?'المعرّف موجود أو البيانات غير صحيحة':'المعرّف أو الكود غير صحيح');}}
+    function logoutUser(){appUser=null; authSession=null; save('authSession',authSession); save('appUser',appUser); currentCloudCartId=null; save('currentCloudCartId',currentCloudCartId); cloudCarts=[]; renderSavedCarts(); updateLoginUI();}
     function cartPayload(){saveCustomer(); const t=cartTotals(); return {app_user_id:appUser&&appUser.id,customer_name:cartCustomer.name||'',customer_phone:cartCustomer.phone||'',notes:cartCustomer.notes||'',discount_percent:t.discount,subtotal:t.subtotal,discount_amount:t.discountAmount,total:t.total,total_margin:t.margin,total_margin_rate:t.marginRate,status:'open',updated_at:new Date().toISOString()};}
     function itemPayloads(cartId){return cart.map(x=>{const p=byCode.get(x.code); if(!p)return null; const u=unitPrice(x,p), line=u*x.qty, m=marginInfo(p,u); return {cart_id:cartId,product_code:p.code,product_name:p.name,brand:p.brand,model:p.model,quantity:x.qty,unit_price:u,unit_cost:Number(p.cost||0),line_total:line,margin_value:m.margin*x.qty,margin_rate:m.rate};}).filter(Boolean);}
     async function syncCloudCart(showMsg=false){if(!appUser||!appUser.id){toast('سجل الدخول أولاً'); return;} if(!cart.length)return; try{const payload=cartPayload(); let row=null; if(currentCloudCartId){const r=await sbRequest('carts?id=eq.'+encodeURIComponent(currentCloudCartId),{method:'PATCH',body:JSON.stringify(payload)}); row=r&&r[0];} if(!row){const r=await sbRequest('carts',{method:'POST',body:JSON.stringify(payload)}); row=r&&r[0]; currentCloudCartId=row.id; save('currentCloudCartId',currentCloudCartId);} await sbRequest('cart_items?cart_id=eq.'+encodeURIComponent(currentCloudCartId),{method:'DELETE'}); const items=itemPayloads(currentCloudCartId); if(items.length) await sbRequest('cart_items',{method:'POST',body:JSON.stringify(items)}); await loadCloudCarts(false); if(showMsg)toast('تم الحفظ والمزامنة');}catch(e){console.error(e); if(showMsg)toast('تعذر الاتصال بـ Supabase');}}
@@ -349,7 +284,7 @@
     function printWebOrder(id){const card=document.querySelector(`[data-order-print="${id}"]`)?.closest('.order-card'); if(!card)return; const w=window.open('','_blank'); w.document.write('<html dir="rtl"><head><title>طلب موقع</title><style>body{font-family:Arial;padding:24px;line-height:1.8}.order-card{border:1px solid #ddd;padding:16px}.order-btn,.status-select{display:none}.order-item{display:grid;grid-template-columns:100px 1fr 50px 100px;gap:8px;border-bottom:1px solid #eee;padding:8px}.order-no{font-weight:bold;color:#102b9f}.order-total{font-weight:bold;color:#059669}</style></head><body><h2>مجموعة بن عمر — طلب موقع</h2>'+card.outerHTML+'<script>print()<\\/script></body></html>'); w.document.close();}
     function openProduct(code){const p=byCode.get(code); if(!p)return; showPage('searchPage'); renderProduct(p); addHistory(code,false); setTimeout(()=>els.result.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
     function showPage(id){document.querySelectorAll('.pages').forEach(p=>p.classList.toggle('active',p.id===id)); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id)); if(id==='cartPage')renderCart(); if(id==='historyPage')renderHistory(); if(id==='savedPage')loadCloudCarts(true); if(id==='dataPage'){} if(id==='webOrdersPage')loadWebOrders(); if(id==='searchPage')setTimeout(()=>{const first=inputs()[0]; if(first)first.focus();},80);}
-    els.loginBtn.addEventListener('click',()=>loginUser(false)); if(els.createUserBtn) els.createUserBtn.style.display = "none"; els.logoutBtn.addEventListener('click',logoutUser); els.loginCode.addEventListener('keydown',e=>{if(e.key==='Enter')loginUser(false);}); els.addSearch.addEventListener('click',addSearchBox); els.focusBtn.addEventListener('click',()=>{const first=inputs()[0]; if(first) first.focus(); search(); if(chosen)addHistory(chosen.code,false);});
+    els.loginBtn.addEventListener('click',()=>loginUser(false)); els.createUserBtn.addEventListener('click',()=>loginUser(true)); els.logoutBtn.addEventListener('click',logoutUser); els.loginCode.addEventListener('keydown',e=>{if(e.key==='Enter')loginUser(false);}); els.addSearch.addEventListener('click',addSearchBox); els.focusBtn.addEventListener('click',()=>{const first=inputs()[0]; if(first) first.focus(); search(); if(chosen)addHistory(chosen.code,false);});
     els.clearBtn.addEventListener('click',()=>{inputs().forEach((i,idx)=>{i.value=''; if(idx>0) i.closest('.search-row').remove();}); search(); const first=inputs()[0]; if(first) first.focus(); toast('تم التفريغ');});
     document.addEventListener('click',e=>{const cq=e.target.closest('[data-card-qty]'); if(cq){const q=document.getElementById('cardQty'); if(q)q.value=Math.max(1,(parseInt(q.value,10)||1)+parseInt(cq.dataset.cardQty,10)); return;} const add=e.target.closest('[data-add]'); if(add){e.stopPropagation(); const q=document.getElementById('cardQty'); addCart(add.dataset.add, add.dataset.cardAdd&&q?q.value:1); return;} const qty=e.target.closest('[data-qty]'); if(qty){e.stopPropagation(); changeQty(qty.dataset.qty,parseInt(qty.dataset.d,10)); return;} const restore=e.target.closest('[data-restore-cart]'); if(restore){e.stopPropagation(); restoreSavedCart(restore.dataset.restoreCart); return;} const delSaved=e.target.closest('[data-delete-cart]'); if(delSaved){e.stopPropagation(); deleteSavedCart(delSaved.dataset.deleteCart); return;} const wa=e.target.closest('[data-order-whatsapp]'); if(wa){const phone=wa.dataset.orderWhatsapp; const num=phone.startsWith('+')?phone.replace('+',''):phone; location.href='https://wa.me/'+num+'?text='+encodeURIComponent('السلام عليكم بخصوص طلبكم '+(wa.dataset.orderNumber||'')); return;} const pr=e.target.closest('[data-order-print]'); if(pr){printWebOrder(pr.dataset.orderPrint); return;} const cancel=e.target.closest('[data-order-cancel]'); if(cancel){updateWebOrderStatus(cancel.dataset.orderCancel,'ملغي'); const sel=cancel.closest('.order-card')?.querySelector('[data-order-status]'); if(sel)sel.value='ملغي'; return;} const nav=e.target.closest('.nav-btn'); if(nav){showPage(nav.dataset.page); return;} const open=e.target.closest('[data-open]'); if(open){openProduct(open.dataset.open); return;} });
     document.addEventListener('change',e=>{const inp=e.target.closest('[data-price-code]'); if(inp){changeCartPrice(inp.dataset.priceCode,inp.value);} const st=e.target.closest('[data-order-status]'); if(st){updateWebOrderStatus(st.dataset.orderStatus,st.value);}});
@@ -358,6 +293,6 @@
     const rwo=$('refreshWebOrders'); if(rwo)rwo.addEventListener('click',loadWebOrders); els.saveCart.addEventListener('click',saveCurrentCart); els.whatsappCart.addEventListener('click',whatsappCart); els.printCart.addEventListener('click',printCart); els.copyCart.addEventListener('click',copyCartText); els.clearCart.addEventListener('click',()=>{cart=[]; currentSavedCartId=null; cartDiscount=0; save('currentSavedCartId',currentSavedCartId); save('cart',cart); save('cartDiscount',cartDiscount); renderCart(); toast('تم تفريغ السلة');}); els.clearHistory.addEventListener('click',()=>{history=[]; save('history',history); renderHistory(); toast('تم تفريغ السجل');}); els.discountInput.addEventListener('input',()=>{cartDiscount=Math.max(0,Math.min(100,Number(els.discountInput.value)||0)); save('cartDiscount',cartDiscount); renderCart(); updateCurrentSavedCart(false);}); [els.customerName,els.customerPhone,els.cartNotes].forEach(x=>x.addEventListener('input',saveCustomer)); els.csvFile.addEventListener('change',e=>{const file=e.target.files[0]; if(!file)return; const r=new FileReader(); r.onload=()=>{localStorage.setItem('benomar_customProductsCsv',r.result); alert('تم حفظ الملف. لتطبيق البيانات الجديدة أرسل الملف لي لتجهيز نسخة نهائية، أو استخدم النسخة الحالية مؤقتاً.');}; r.readAsText(file,'utf-8');}); els.resetData.addEventListener('click',()=>{localStorage.removeItem('benomar_customProducts'); toast('تم الرجوع للبيانات الأصلية');});
     els.totalTop.textContent=nf.format(products.length); updateLoginUI(); const first=inputs()[0]; if(first){first.addEventListener('input',search); if(!(appUser&&appUser.id)) first.blur(); else first.focus();} fillCustomer(); renderCart(); renderHistory(); renderSavedCarts(); loadCloudCarts(false); setInterval(()=>{if(document.getElementById('savedPage').classList.contains('active'))loadCloudCarts(true); if(document.getElementById('webOrdersPage')&&document.getElementById('webOrdersPage').classList.contains('active'))loadWebOrders();},10000); search();
   </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a16e6b204c2c2770',t:'MTc4MzMzODkwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1763d3f1ae72770',t:'MTc4MzQyMDkxMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
 </html>
