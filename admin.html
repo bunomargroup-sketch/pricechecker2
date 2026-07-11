@@ -110,6 +110,11 @@
       .bottom-nav{grid-template-columns:repeat(3,1fr);gap:6px;padding:7px 8px calc(7px + env(safe-area-inset-bottom))}.nav-btn{min-width:0;width:100%;padding:8px 4px;font-size:12px;border-radius:12px}
     }
   </style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(console.warn));}</script>
 </head>
 <body>
   <div class="app">
@@ -294,5 +299,5 @@
     els.totalTop.textContent=nf.format(products.length); updateLoginUI(); const first=inputs()[0]; if(first){first.addEventListener('input',search); if(!(appUser&&appUser.id)) first.blur(); else first.focus();} fillCustomer(); renderCart(); renderHistory(); renderSavedCarts(); loadCloudCarts(false); if(appUser&&appUser.id&&authSession&&authSession.access_token)loadPrivatePrices(); setInterval(()=>{if(document.getElementById('savedPage').classList.contains('active'))loadCloudCarts(true); if(document.getElementById('webOrdersPage')&&document.getElementById('webOrdersPage').classList.contains('active'))loadWebOrders();},10000); search();
   </script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a188d45b1e55a10c',t:'MTc4MzYxNTg0NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
