@@ -13,14 +13,23 @@ function normalizeRow(r){return {code:r.code,name:r.name||'',brand:r.brand||'',m
 
 async function ensureAdminShopAuth(){
   try{
-    if(authSession?.access_token){const rows=await sb('staff_roles?select=role&user_id=eq.'+authSession.user.id); if(rows&&rows[0]?.role==='admin')return true;}
+    if(authSession?.access_token){
+      try{
+        const rows=await sb('staff_roles?select=role&user_id=eq.'+authSession.user.id);
+        if(rows&&rows[0]?.role==='admin')return true;
+      }catch(e){
+        console.warn('admin-shop saved session invalid, asking login again',e);
+        localStorage.removeItem('adminShopAuthSession'); authSession=null;
+      }
+    }
     const identifier=prompt('المعرّف'); if(!identifier)return false;
     const code=prompt('الكود'); if(!code)return false;
     const user=await authSignIn(identifier,code);
     const rows=await sb('staff_roles?select=role&user_id=eq.'+user.id);
     if(rows&&rows[0]?.role==='admin')return true;
-  }catch(e){console.error(e)}
-  document.body.innerHTML='<div style="direction:rtl;font-family:Cairo,Tahoma;padding:40px;text-align:center"><h2>غير مصرح</h2><p>هذه الصفحة للمدير فقط.</p></div>';
+    localStorage.removeItem('adminShopAuthSession'); authSession=null;
+  }catch(e){console.error(e); localStorage.removeItem('adminShopAuthSession'); authSession=null;}
+  document.body.innerHTML=`<div style="direction:rtl;font-family:Cairo,Tahoma;padding:40px;text-align:center"><h2>غير مصرح</h2><p>هذه الصفحة للمدير فقط.</p><button onclick="localStorage.removeItem('adminShopAuthSession');location.reload()" style="padding:12px 18px;border:0;border-radius:10px;background:#2563eb;color:white;font-weight:800;cursor:pointer">تسجيل الدخول مرة أخرى</button></div>`;
   return false;
 }
 
@@ -40,5 +49,5 @@ async function uploadBlob(path,blob){const res=await fetch(SUPABASE_URL+'/storag
 async function uploadFiles(){if(!current)return; const files=[...$('files').files]; if(!files.length)return toast('اختر صورة'); current.image_paths=current.image_paths||[]; current.thumbnail_paths=current.thumbnail_paths||[]; for(const [i,file] of files.entries()){try{const base=current.code+'/'+Date.now()+'-'+i; const fullPath=base+'.webp', thumbPath=base+'_thumb.webp'; const full=await resizeImageFile(file,1200,.82); const thumb=await resizeImageFile(file,600,.72); await uploadBlob(fullPath,full); await uploadBlob(thumbPath,thumb); current.image_paths.push(fullPath); current.thumbnail_paths.push(thumbPath);}catch(e){console.error(e);toast('فشل رفع صورة: '+file.name)}} $('files').value=''; await saveProduct(); renderPhotos(); toast('تم رفع الصور المضغوطة')}
 async function toggleActive(code){const p=PRODUCTS.find(x=>x.code===code); if(!p)return; p.active=!p.active; await sb('web_products',{method:'POST',body:JSON.stringify(payload(p)),headers:{Prefer:'resolution=merge-duplicates'}}); render(); toast(p.active?'تم الإظهار':'تم الإخفاء')}
 document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'); if(edit)openEdit(edit.dataset.edit); const tog=e.target.closest('[data-toggle]'); if(tog)toggleActive(tog.dataset.toggle); const del=e.target.closest('[data-del-photo]'); if(del&&current){const idx=(current.image_paths||[]).indexOf(del.dataset.delPhoto); current.image_paths=(current.image_paths||[]).filter(x=>x!==del.dataset.delPhoto); if(idx>=0) current.thumbnail_paths=(current.thumbnail_paths||[]).filter((_,i)=>i!==idx); renderPhotos(); saveProduct()}}); ['search','filterMain','filterStatus','sortBy'].forEach(id=>$(id).addEventListener('input',render)); $('close').onclick=()=>$('modal').classList.remove('show'); $('save').onclick=saveProduct; $('upload').onclick=uploadFiles; $('newProduct').onclick=openNewProduct; $('syncAll').onclick=syncAll; $('reload').onclick=loadDetails; ensureAdminShopAuth().then(ok=>{if(ok)loadDetails();});
-</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1d238a5cdd22770',t:'MTc4NDM4NTQxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1d25ef9ed7118ec',t:'MTc4NDM4Njk4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body></html>
