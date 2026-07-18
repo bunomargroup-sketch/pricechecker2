@@ -52,11 +52,20 @@ async function blobFromPublicImage(path){
   return await res.blob();
 }
 function resizeBlob(blob,maxSize=600,quality=.72){return new Promise((resolve,reject)=>{const img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{let w=img.naturalWidth||img.width,h=img.naturalHeight||img.height; const scale=Math.min(1,maxSize/Math.max(w,h)); w=Math.max(1,Math.round(w*scale)); h=Math.max(1,Math.round(h*scale)); const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d'); ctx.drawImage(img,0,0,w,h); c.toBlob(b=>b?resolve(b):reject(new Error('تعذر إنشاء الصورة المصغرة')),'image/webp',quality); URL.revokeObjectURL(img.src);}; img.onerror=reject; img.src=URL.createObjectURL(blob);});}
-function thumbPathFor(path){const clean=String(path||'').replace(/\.[^.\/]+$/,''); return clean+'_thumb.webp'}
+function safeFileBaseFromPath(path,code,index){
+  const raw=String(path||'').split('?')[0].split('/').pop()||('image-'+index);
+  const base=raw.replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||('image-'+index);
+  return `${code||'product'}/${base}`;
+}
+function thumbPathFor(path,code,index){return safeFileBaseFromPath(path,code,index)+'_thumb.webp'}
 async function generateThumbnailsForProduct(p=current){
   if(!p)return toast('اختر منتجًا أولاً');
-  const imgs=Array.isArray(p.image_paths)?p.image_paths:[];
+  let imgs=Array.isArray(p.image_paths)&&p.image_paths.length ? [...p.image_paths] : [];
+  // Fallback for very old records that only have an image filename and no image_paths.
+  if(!imgs.length && p.image) imgs=[p.image];
   if(!imgs.length)return toast('لا توجد صور لهذا المنتج');
+  p.image_paths=Array.isArray(p.image_paths)?p.image_paths:[];
+  if(!p.image_paths.length) p.image_paths=[...imgs];
   p.thumbnail_paths=Array.isArray(p.thumbnail_paths)?p.thumbnail_paths:[];
   let made=0;
   for(let i=0;i<imgs.length;i++){
@@ -65,14 +74,16 @@ async function generateThumbnailsForProduct(p=current){
     try{
       const blob=await blobFromPublicImage(img);
       const thumb=await resizeBlob(blob,600,.72);
-      const tpath=thumbPathFor(img);
+      // Thumbnail names do NOT need original photo names to match product code.
+      // We save thumbnails under the product code folder for organization.
+      const tpath=thumbPathFor(img,p.code,i);
       await uploadBlob(tpath,thumb);
       p.thumbnail_paths[i]=tpath;
       made++;
     }catch(e){console.error('thumbnail failed',img,e)}
   }
   await sb('web_products',{method:'POST',body:JSON.stringify(payload(p)),headers:{Prefer:'resolution=merge-duplicates'}});
-  if(current&&current.code===p.code){current.thumbnail_paths=p.thumbnail_paths;renderPhotos();}
+  if(current&&current.code===p.code){current.image_paths=p.image_paths;current.thumbnail_paths=p.thumbnail_paths;renderPhotos();}
   toast(made?('تم توليد '+made+' صورة مصغرة'):'كل الصور لديها thumbnails بالفعل');
   return made;
 }
@@ -91,5 +102,5 @@ async function generateAllThumbnails(){
 async function uploadFiles(){if(!current)return; const files=[...$('files').files]; if(!files.length)return toast('اختر صورة'); current.image_paths=current.image_paths||[]; current.thumbnail_paths=current.thumbnail_paths||[]; for(const [i,file] of files.entries()){try{const base=current.code+'/'+Date.now()+'-'+i; const fullPath=base+'.webp', thumbPath=base+'_thumb.webp'; const full=await resizeImageFile(file,1200,.82); const thumb=await resizeImageFile(file,600,.72); await uploadBlob(fullPath,full); await uploadBlob(thumbPath,thumb); current.image_paths.push(fullPath); current.thumbnail_paths.push(thumbPath);}catch(e){console.error(e);toast('فشل رفع صورة: '+file.name)}} $('files').value=''; await saveProduct(); renderPhotos(); toast('تم رفع الصور المضغوطة')}
 async function toggleActive(code){const p=PRODUCTS.find(x=>x.code===code); if(!p)return; p.active=!p.active; await sb('web_products',{method:'POST',body:JSON.stringify(payload(p)),headers:{Prefer:'resolution=merge-duplicates'}}); render(); toast(p.active?'تم الإظهار':'تم الإخفاء')}
 document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'); if(edit)openEdit(edit.dataset.edit); const tog=e.target.closest('[data-toggle]'); if(tog)toggleActive(tog.dataset.toggle); const del=e.target.closest('[data-del-photo]'); if(del&&current){const idx=(current.image_paths||[]).indexOf(del.dataset.delPhoto); current.image_paths=(current.image_paths||[]).filter(x=>x!==del.dataset.delPhoto); if(idx>=0) current.thumbnail_paths=(current.thumbnail_paths||[]).filter((_,i)=>i!==idx); renderPhotos(); saveProduct()}}); ['search','filterMain','filterStatus','sortBy'].forEach(id=>$(id).addEventListener('input',render)); $('close').onclick=()=>$('modal').classList.remove('show'); $('save').onclick=saveProduct; $('upload').onclick=uploadFiles; if($('genThumbs'))$('genThumbs').onclick=()=>generateThumbnailsForProduct(current); if($('genAllThumbs'))$('genAllThumbs').onclick=generateAllThumbnails; $('newProduct').onclick=openNewProduct; $('syncAll').onclick=syncAll; $('reload').onclick=loadDetails; ensureAdminShopAuth().then(ok=>{if(ok)loadDetails();});
-</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1d31138b9cc18ec',t:'MTc4NDM5NDI4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-</body></html>
+</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1d3580bdcb818ec',t:'MTc4NDM5NzE4NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body></html>
