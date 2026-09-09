@@ -28,7 +28,8 @@ libraries, no analytics, no ads — only the standard Android SDK.
 2. [Ready-made APKs](#ready-made-apks)
 3. [Install on the tablet (Windows + ADB)](#install-on-the-tablet-windows--adb)
 4. [First-run setup](#first-run-setup)
-5. [The hidden admin menu](#the-hidden-admin-menu)
+5. [Making the on-screen keyboard smaller](#making-the-on-screen-keyboard-smaller)
+6. [The hidden admin menu](#the-hidden-admin-menu)
 6. [Kiosk mode](#kiosk-mode)
 7. [Device Owner (true Lock Task)](#device-owner-true-lock-task)
 8. [Removing Device Owner status safely](#removing-device-owner-status-safely)
@@ -77,8 +78,8 @@ android/
 
 | File | Size | Signed with | Use for |
 |---|---|---|---|
-| `apk/BenAmorPriceChecker-1.0.0-release.apk` | ≈ 70 KB | `keystore/benamor-release.jks` | **production — install this one** |
-| `apk/BenAmorPriceChecker-1.0.0-debug.apk` | ≈ 70 KB | debug key | quick testing |
+| `apk/BenAmorPriceChecker-1.0.1-release.apk` | ≈ 70 KB | `keystore/benamor-release.jks` | **production — install this one** |
+| `apk/BenAmorPriceChecker-1.0.1-debug.apk` | ≈ 70 KB | debug key | quick testing |
 
 Both are built from the source in this folder, targetSdk 34 / minSdk 24
 (Android 7.0+), verified with APK Signature Scheme **v2 + v3** — exactly what
@@ -111,14 +112,14 @@ driver or try another USB port/cable).
    elsewhere; from the repo folder it is):
 
 ```bat
-adb install -r "android\apk\BenAmorPriceChecker-1.0.0-release.apk"
+adb install -r "android\apk\BenAmorPriceChecker-1.0.1-release.apk"
 ```
 
 (`-r` = reinstall/replace, keeps all app data.)
 If you downloaded the APK to your **Downloads** folder, use:
 
 ```bat
-adb install -r "%USERPROFILE%\Downloads\BenAmorPriceChecker-1.0.0-release.apk"
+adb install -r "%USERPROFILE%\Downloads\BenAmorPriceChecker-1.0.1-release.apk"
 ```
 
 5. Launch it from the launcher: **BEN AMOR Price Checker**.
@@ -132,14 +133,14 @@ adb install -r "%USERPROFILE%\Downloads\BenAmorPriceChecker-1.0.0-release.apk"
 
 - **New APK version (same signing key):**
   ```bat
-  adb install -r "android\apk\BenAmorPriceChecker-1.0.1-release.apk"
+  adb install -r "android\apk\BenAmorPriceChecker-1.0.2-release.apk"
   ```
   Logins, saved carts and settings are preserved.
 - **If Android refuses** (`INSTALL_FAILED_UPDATE_INCOMPATIBLE` — different
   signature was installed before):
   ```bat
   adb uninstall com.benamorgroup.pricechecker
-  adb install "android\apk\BenAmorPriceChecker-1.0.0-release.apk"
+  adb install "android\apk\BenAmorPriceChecker-1.0.1-release.apk"
   ```
   Uninstalling wipes the app's local storage (logins/carts on that device) —
   they re-sync from Supabase after signing in again.
@@ -507,6 +508,34 @@ zipalign-verified, manifest/dex/resources parsed with two independent tools
 |---|---|
 | "App not installed" | Existing install has a different signature → `adb uninstall com.benamorgroup.pricechecker` first, or install the matching variant (debug vs release). |
 | Old website version shown | Wait ≤10 min (GitHub Pages/SW cache) or use admin → تحديث / فحص أحدث إصدار. |
+| Blank screen after a renderer crash | app auto-recovers; if not, admin → إعادة تحميل التطبيق. |
+| Print dialog does not appear | Check that a print service exists (Settings → Printing); "Save as PDF" is built into AOSP/LineageOS. |
+| WhatsApp share says blocked | You are in pinned (non-owner) kiosk — use Device Owner mode (WhatsApp is whitelisted), or exit kiosk to share. |
+| App does not start after reboot | See [Auto-start after reboot](#auto-start-after-reboot) — set Device Owner or run the appops command. |
+| Forgot the admin PIN | `adb shell pm clear com.benamorgroup.pricechecker` resets ALL app data including the PIN (also logs out the site). |
+
+---
+
+## How the shipped APKs were built
+
+The APKs in `apk/` were produced by `android/build-apk.sh` from this exact
+source tree, without Android Studio, using only open/reproducible components
+(all fetched from public mirrors — see the script):
+
+- **aapt2 2.20** (resource compile/link) — from the `aaptjs3` npm package,
+  which bundles Google's official aapt2 binaries
+- **javac 17** compiling to Java 8 bytecode — OpenJDK 17 from the AOSP
+  prebuilts mirror (`platform.prebuilts.jdk.jdk17`, linux-x86)
+- **android.jar (API 34)** — from the `Sable/android-platforms` mirror
+- **D8** — `r8-master.jar` from the AOSP/LineageOS prebuilts mirror
+  (desugars lambdas to minSdk 24)
+- **apksigner** — compiled from AOSP `tools/apksig` source (LineageOS mirror)
+- **zipalign** — AOSP prebuilts build-tools (LineageOS mirror)
+
+The equivalent Gradle project in this folder builds the same sources with
+standard AGP in Android Studio — keep the two version variables in sync when
+bumping versions.
+ فحص أحدث إصدار. |
 | Blank screen after a renderer crash | app auto-recovers; if not, admin → إعادة تحميل التطبيق. |
 | Print dialog does not appear | Check that a print service exists (Settings → Printing); "Save as PDF" is built into AOSP/LineageOS. |
 | WhatsApp share says blocked | You are in pinned (non-owner) kiosk — use Device Owner mode (WhatsApp is whitelisted), or exit kiosk to share. |

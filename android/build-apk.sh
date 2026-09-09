@@ -16,8 +16,8 @@
 # =============================================================================
 set -euo pipefail
 
-VERSION_NAME="1.0.0"
-VERSION_CODE="1"
+VERSION_NAME="1.0.1"
+VERSION_CODE="2"
 
 RELEASE_STORE_PASS="benamor-release-2024"
 RELEASE_KEY_PASS="benamor-release-2024"

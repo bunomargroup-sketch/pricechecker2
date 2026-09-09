@@ -25,6 +25,7 @@ import android.print.PrintManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
@@ -125,6 +126,7 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
         bindViews();
+        setupKeyboardResize();
 
         attachNewWebView();
         applyOrientationPref();
@@ -161,6 +163,30 @@ public class MainActivity extends Activity {
 
         Button popupClose = findViewById(R.id.btnPopupClose);
         popupClose.setOnClickListener(v -> closePopup());
+    }
+
+    /**
+     * Keyboard behaviour: the app content must always stay visible above the
+     * on-screen keyboard (search box, cart, retry screen...).
+     *
+     * Android 11 (API 30) delivers IME insets reliably, so on API 30+ the
+     * window uses ADJUST_NOTHING and the root view is padded up by the exact
+     * keyboard height — this works even in immersive fullscreen, where plain
+     * adjustResize is unreliable. Older Android versions fall back to the
+     * manifest's android:windowSoftInputMode="adjustResize".
+     */
+    private void setupKeyboardResize() {
+        if (Build.VERSION.SDK_INT < 30) {
+            return;
+        }
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        View root = findViewById(R.id.root);
+        root.setOnApplyWindowInsetsListener((v, insets) -> {
+            android.graphics.Insets ime = insets.getInsets(WindowInsets.Type.ime());
+            v.setPadding(0, 0, 0, ime.bottom);
+            return insets;
+        });
     }
 
     @Override
