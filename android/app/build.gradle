@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.benamorgroup.pricechecker'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.benamorgroup.pricechecker"
+        minSdk 24          // works on Android 7.0+; the tablet is Android 11 (API 30)
+        targetSdk 34
+        versionCode 3
+        versionName "1.0.2"
+    }
+
+    signingConfigs {
+        release {
+            storeFile rootProject.file('keystore/benamor-release.jks')
+            storePassword project.findProperty('BENAMOR_STORE_PASSWORD') ?: 'benamor-release-2024'
+            keyAlias 'benamor'
+            keyPassword project.findProperty('BENAMOR_KEY_PASSWORD') ?: 'benamor-release-2024'
+        }
+        // use the same debug key as the shipped prebuilt debug APK, so
+        // `adb install -r` works between Android Studio builds and apk/*.apk
+        debug {
+            storeFile rootProject.file('keystore/debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false   // the app is already tiny; keep the build simple
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+// Deliberately empty: no AndroidX, no Kotlin, no Play Services, no analytics.
+// Everything the kiosk needs is in the Android framework (WebView,
+// DevicePolicyManager, PrintManager, DownloadManager, ...).
+dependencies {
+}

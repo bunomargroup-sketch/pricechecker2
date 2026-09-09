@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches the Price Checker web app palette -->
+    <color name="bg">#0B1020</color>
+    <color name="brand_blue">#1D4ED8</color>
+    <color name="brand_blue_light">#5A7CFF</color>
+    <color name="muted">#94A3B8</color>
+    <color name="warning">#FBBF24</color>
+    <color name="popup_bg">#F3F6FB</color>
+    <color name="ic_launcher_background">#1D4ED8</color>
+</resources>

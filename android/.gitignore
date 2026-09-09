@@ -1,0 +1,17 @@
+# Gradle / Android Studio
+.gradle/
+build/
+app/build/
+local.properties
+.idea/
+*.iml
+captures/
+.cxx/
+
+# Manual build pipeline output (final APKs are copied to apk/ explicitly)
+.build/
+
+# Never ignore: keystore/, apk/, gradle wrapper
+
+# v4 signature sidecar files (not needed for adb install)
+apk/*.idsig

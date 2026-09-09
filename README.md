@@ -102,6 +102,18 @@ Suggested first version:
 - orders saved to Supabase
 - staff app page for website orders
 
+## Android kiosk app (showroom tablet)
+
+The `android/` folder contains a tiny native Android kiosk wrapper (about 70 KB APK) for this web app.
+It only loads the hosted GitHub Pages URL above — so:
+
+```text
+Update website → GitHub Pages publishes new version → Tablet kiosk opens the same URL → New version loads
+```
+
+No APK rebuild or reinstall is needed for website updates.
+Ready-made APKs, exact ADB install commands, kiosk/Device-Owner setup and recovery instructions are in `android/README.md`.
+
 ## Backup recommendation
 
 Keep backups of:
