@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  BEN AMOR Price Checker — Android kiosk wrapper
+  Package: com.benamorgroup.pricechecker
+
+  The APK does NOT contain the Price Checker website. It is a secure
+  fullscreen WebView that always loads the hosted web app:
+
+      https://bunomargroup-sketch.github.io/pricechecker2/
+
+  so that website updates reach the tablet without rebuilding the APK.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- WebView network access (Price Checker, Supabase, Google Fonts) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Only used to detect online/offline state for the Arabic offline banner -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Optional "start after reboot" feature (toggle in the admin menu) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- NOTE: no storage, camera, location or phone permissions are requested.
+         Downloads (if the website ever adds them) go through the system
+         DownloadManager, which needs no permission on Android 10+. -->
+
+    <application
+        android:name=".App"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="false">
+
+        <!--
+          Main (and only) activity.
+          - portrait by default; change android:screenOrientation to
+            "landscape" or "unspecified", or change it at runtime from the
+            hidden admin menu (recommended).
+          - configChanges avoids destroying/reloading the WebView when the
+            device rotates or the keyboard appears.
+          - singleTask: relaunching (boot receiver / crash restart) brings the
+            existing task forward instead of stacking a second copy.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          Starts the Price Checker after the tablet reboots.
+          Exported="true" is required to reliably receive BOOT_COMPLETED on
+          every build; it is safe because BOOT_COMPLETED is a protected
+          broadcast that only the Android system can send.
+          Android 10+ background-activity-start restrictions still apply to
+          what the receiver may launch — see README ("Auto-start on boot").
+        -->
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+          Device admin component. Required only for TRUE Lock Task kiosk mode
+          (app set as Device Owner via ADB). See README "Device Owner".
+        -->
+        <receiver
+            android:name=".KioskDeviceAdminReceiver"
+            android:description="@string/device_admin_description"
+            android:exported="true"
+            android:label="@string/device_admin_label"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

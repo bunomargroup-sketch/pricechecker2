@@ -1,0 +1,9 @@
+// Root build file — BEN AMOR Price Checker kiosk wrapper.
+//
+// Requires Android Studio Hedgehog (2023.1.1) or newer, or any Gradle 8.2+
+// with JDK 17. The app itself has NO external dependencies: it uses only the
+// Android framework SDK, which keeps the APK tiny (~350 KB).
+
+plugins {
+    id 'com.android.application' version '8.2.2' apply false
+}

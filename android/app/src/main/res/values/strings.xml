@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Launcher name (brand, shown under the icon) -->
+    <string name="app_name">BEN AMOR Price Checker</string>
+
+    <!-- Splash -->
+    <string name="splash_title">BEN AMOR GROUP</string>
+    <string name="splash_subtitle">Price Checker</string>
+    <string name="splash_loading">جارٍ تحميل التطبيق…</string>
+
+    <!-- Offline banner -->
+    <string name="offline_banner">لا يوجد اتصال بالإنترنت — يتم عرض النسخة المحفوظة</string>
+
+    <!-- Error screen -->
+    <string name="error_title">تعذر تحميل التطبيق</string>
+    <string name="error_network">لا يوجد اتصال بالإنترنت، أو تعذر الوصول إلى الموقع.</string>
+    <string name="error_http">تعذر تحميل الصفحة من الخادم (رمز الخطأ: %1$d).</string>
+    <string name="error_timeout">استغرق التحميل وقتاً أطول من المتوقع.</string>
+    <string name="btn_retry">إعادة المحاولة</string>
+
+    <!-- Navigation / external apps -->
+    <string name="blocked_link">هذا الرابط غير مسموح به في وضع الكشك</string>
+    <string name="whatsapp_missing">واتساب غير مثبَّت على هذا الجهاز</string>
+    <string name="external_blocked_kiosk">لا يمكن فتح تطبيقات خارجية أثناء وضع الكشك</string>
+
+    <!-- File picker (CSV import / photo upload on admin pages) -->
+    <string name="file_chooser_title">اختيار ملف</string>
+    <string name="file_chooser_failed">تعذر فتح أداة اختيار الملفات</string>
+
+    <!-- Downloads -->
+    <string name="download_started">بدأ التنزيل في مجلد Downloads/BenAmor</string>
+    <string name="download_failed">تعذر بدء التنزيل</string>
+
+    <!-- Reliability -->
+    <string name="crash_recovered">تم استعادة التطبيق تلقائياً</string>
+    <string name="refresh_started">جارٍ فحص أحدث إصدار من الموقع…</string>
+    <string name="reload_started">جارٍ إعادة التحميل…</string>
+
+    <!-- Quotation popup / printing -->
+    <string name="popup_title">معاينة عرض السعر</string>
+    <string name="print_hint">طباعة / حفظ PDF</string>
+    <string name="popup_close">إغلاق ✕</string>
+    <string name="print_job_name">عرض سعر — مجموعة بن عمر</string>
+    <string name="print_unavailable">خدمة الطباعة غير متوفرة على هذا الجهاز</string>
+
+    <!-- Admin PIN -->
+    <string name="admin_pin_title">رمز الإدارة</string>
+    <string name="admin_pin_msg">أدخل رمز الإدارة للمتابعة</string>
+    <string name="pin_hint">الرمز</string>
+    <string name="pin_wrong">الرمز غير صحيح</string>
+    <string name="pin_locked">تم القفل مؤقتاً، حاول بعد %1$d ثانية</string>
+    <string name="pin_lockout">محاولات كثيرة خاطئة — مقفول لمدة دقيقة</string>
+    <string name="pin_new">الرمز الجديد (٤ أرقام على الأقل)</string>
+    <string name="pin_confirm">تأكيد الرمز الجديد</string>
+    <string name="pin_mismatch">الرمزان غير متطابقين</string>
+    <string name="pin_changed">تم تغيير رمز الإدارة</string>
+    <string name="pin_too_short">الرمز قصير جداً</string>
+
+    <!-- Admin menu -->
+    <string name="admin_menu_title">قائمة الإدارة</string>
+    <string name="menu_refresh_latest">تحديث / فحص أحدث إصدار</string>
+    <string name="menu_reload">إعادة تحميل التطبيق</string>
+    <string name="menu_clear_cache">مسح الذاكرة المؤقتة فقط</string>
+    <string name="cache_confirm_msg">سيتم مسح الملفات المؤقتة فقط. تسجيل الدخول والسلات المحفوظة لن تتأثر. متابعة؟</string>
+    <string name="cache_cleared">تم مسح الذاكرة المؤقتة</string>
+    <string name="menu_clear_data">مسح جميع بيانات الموقع (خروج كامل)</string>
+    <string name="site_data_confirm_msg">تحذير: سيتم حذف تسجيل الدخول والسلات المحفوظة والسجل من هذا الجهاز. متابعة؟</string>
+    <string name="site_data_cleared">تم مسح جميع البيانات، جارٍ إعادة التحميل…</string>
+    <string name="menu_kiosk_start">بدء وضع الكشك</string>
+    <string name="menu_kiosk_stop">إيقاف وضع الكشك</string>
+    <string name="kiosk_pinned_notice">سيُطلب تأكيد تثبيت التطبيق — اضغط «تثبيت»</string>
+    <string name="kiosk_failed">تعذر بدء وضع الكشك</string>
+    <string name="menu_autokiosk">دخول الكشك تلقائياً عند التشغيل</string>
+    <string name="autokiosk_on">سيتم دخول الكشك تلقائياً عند كل تشغيل</string>
+    <string name="autokiosk_off">تم إيقاف الدخول التلقائي للكشك</string>
+    <string name="autokiosk_disabled_with_exit">تم إيقاف الكشك وإلغاء الدخول التلقائي</string>
+    <string name="menu_autoboot">تشغيل تلقائي بعد إعادة تشغيل الجهاز</string>
+    <string name="autoboot_on">سيبدأ التطبيق تلقائياً بعد إعادة تشغيل الجهاز (إن سمح النظام)</string>
+    <string name="autoboot_off">تم إيقاف التشغيل التلقائي بعد إعادة التشغيل</string>
+    <string name="menu_orientation">اتجاه الشاشة: %1$s</string>
+    <string name="orientation_portrait">عمودي</string>
+    <string name="orientation_landscape">أفقي</string>
+    <string name="orientation_auto">تلقائي</string>
+    <string name="orientation_now">اتجاه الشاشة الآن: %1$s</string>
+    <string name="menu_wifi">فتح إعدادات Wi-Fi</string>
+    <string name="wifi_failed">تعذر فتح إعدادات Wi-Fi</string>
+    <string name="menu_change_pin">تغيير رمز الإدارة</string>
+    <string name="menu_info">معلومات التطبيق</string>
+    <string name="menu_remove_owner">إلغاء تسجيل المالك (Device Owner)</string>
+    <string name="owner_remove_confirm">سيتم إلغاء وضع مالك الجهاز، وستفقد ميزات الكشك الكاملة (Lock Task). متابعة؟</string>
+    <string name="owner_removed">تم إلغاء تسجيل مالك الجهاز</string>
+    <string name="owner_remove_failed">تعذر إلغاء تسجيل مالك الجهاز</string>
+    <string name="menu_exit">إنهاء التطبيق</string>
+
+    <!-- App info -->
+    <string name="info_version">الإصدار: %1$s</string>
+    <string name="info_package">اسم الحزمة: %1$s</string>
+    <string name="info_url">الموقع: %1$s</string>
+    <string name="info_webview">إصدار WebView: %1$s</string>
+    <string name="info_owner">مالك الجهاز (Device Owner): %1$s</string>
+    <string name="info_kiosk">وضع الكشك النشط: %1$s</string>
+    <string name="info_autoboot">تشغيل تلقائي بعد إعادة التشغيل: %1$s</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+
+    <!-- Common -->
+    <string name="ok">موافق</string>
+    <string name="cancel">إلغاء</string>
+    <string name="close">إغلاق</string>
+
+    <!-- Device admin -->
+    <string name="device_admin_label">BEN AMOR Kiosk Admin</string>
+    <string name="device_admin_description">يسمح بتشغيل وضع الكشك الكامل (Lock Task) لتطبيق Price Checker عندما يكون مالك الجهاز.</string>
+    <string name="device_admin_enabled">تم تفعيل مكوّن الإدارة</string>
+    <string name="device_admin_disabled">تم تعطيل مكوّن الإدارة</string>
+    <string name="device_admin_disable_warning">سيتم تعطيل وضع الكشك الكامل. هل أنت متأكد؟</string>
+</resources>

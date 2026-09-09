@@ -22,6 +22,11 @@
 - `data/website-products.csv`
 - `data/website-products.json`
 
+## Android kiosk wrapper (showroom tablet)
+
+- `android/` — complete Android Studio project for the tablet kiosk app
+- `android/apk/` — ready-to-install APKs (see `android/README.md` for install/kiosk instructions)
+
 ## Uploaded source files/archive
 
 - `uploads/` — original uploaded files and screenshots kept as archive
