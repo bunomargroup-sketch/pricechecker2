@@ -103,6 +103,20 @@
     <string name="yes">نعم</string>
     <string name="no">لا</string>
 
+    <!-- APK self-update (admin menu) -->
+    <string name="menu_update_apk">تحديث تطبيق الأندرويد (APK)</string>
+    <string name="update_checking">جارٍ التحقق من تحديث التطبيق…</string>
+    <string name="update_check_failed">تعذر الوصول إلى معلومات التحديث — تأكد من الاتصال بالإنترنت</string>
+    <string name="update_already_latest">التطبيق محدّث (الإصدار %1$s)</string>
+    <string name="update_available_title">تحديث جديد للتطبيق</string>
+    <string name="update_available_msg">الإصدار %1$s متاح للتثبيت. بعد التثبيت قد يُغلق التطبيق لحظات ثم يعود تلقائياً. البيانات وتسجيل الدخول لن تتأثر. متابعة؟</string>
+    <string name="update_downloading">جارٍ تنزيل التحديث…</string>
+    <string name="update_download_failed">تعذر تنزيل ملف التحديث</string>
+    <string name="update_installing">جارٍ التثبيت…</string>
+    <string name="update_success">تم التثبيت بنجاح — جارٍ إعادة الفتح</string>
+    <string name="update_install_failed">فشل تثبيت التحديث — تأكد أن التطبيق المثبت يستخدم مفتاح توقيع الإصدار release</string>
+    <string name="update_needs_unknown_apps">يجب السماح لهذا التطبيق بتثبيت التطبيقات غير المعروفة — سيتم فتح الإعدادات الآن، اسمح ثم أعد المحاولة</string>
+
     <!-- Common -->
     <string name="ok">موافق</string>
     <string name="cancel">إلغاء</string>

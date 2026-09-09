@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -110,6 +112,16 @@ public class MainActivity extends Activity {
     private ConnectivityManager.NetworkCallback networkCallback;
     private android.content.SharedPreferences prefs;
 
+    /** Install-status broadcasts from the system PackageInstaller (self-update). */
+    private final BroadcastReceiver installStatusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (SelfUpdater.ACTION_INSTALL_STATUS.equals(intent.getAction())) {
+                SelfUpdater.handleStatus(MainActivity.this, intent);
+            }
+        }
+    };
+
     // ========================================================================
     // Lifecycle
     // ========================================================================
@@ -131,6 +143,18 @@ public class MainActivity extends Activity {
         attachNewWebView();
         applyOrientationPref();
         registerNetworkCallback();
+
+        // APK self-update: listen for the system installer result
+        try {
+            IntentFilter installFilter = new IntentFilter(SelfUpdater.ACTION_INSTALL_STATUS);
+            if (Build.VERSION.SDK_INT >= 33) {
+                registerReceiver(installStatusReceiver, installFilter,
+                        Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(installStatusReceiver, installFilter);
+            }
+        } catch (Throwable ignored) {
+        }
 
         // Service workers power the offline (PWA) behaviour of the web app.
         try {
@@ -210,6 +234,10 @@ public class MainActivity extends Activity {
             } catch (Throwable ignored) {
             }
             networkCallback = null;
+        }
+        try {
+            unregisterReceiver(installStatusReceiver);
+        } catch (Throwable ignored) {
         }
         closePopup();
         destroyMainWebView();
@@ -950,6 +978,9 @@ public class MainActivity extends Activity {
         labels.add(getString(R.string.menu_refresh_latest)); // "Refresh / check latest version"
         actions.add(this::refreshLatestVersion);
 
+        labels.add(getString(R.string.menu_update_apk)); // APK self-update
+        actions.add(this::checkForApkUpdate);
+
         labels.add(getString(R.string.menu_reload));
         actions.add(() -> {
             closePopup();
@@ -1076,6 +1107,35 @@ public class MainActivity extends Activity {
         String url = Config.APP_URL + sep + "_k=" + System.currentTimeMillis();
         web.loadUrl(url, headers);
         schedulePageTimeout();
+    }
+
+    /** Admin action: check for a newer APK and install it from within the app. */
+    private void checkForApkUpdate() {
+        toast(R.string.update_checking);
+        SelfUpdater.checkLatest(this, (latest, baseUrl, currentCode) -> {
+            if (latest == null || baseUrl == null) {
+                toast(R.string.update_check_failed);
+                return;
+            }
+            int newCode = latest.optInt("versionCode", -1);
+            if (newCode <= currentCode) {
+                toast(getString(R.string.update_already_latest,
+                        SelfUpdater.currentVersionName(MainActivity.this)));
+                return;
+            }
+            String name = latest.optString("versionName", String.valueOf(newCode));
+            confirm(getString(R.string.update_available_title),
+                    getString(R.string.update_available_msg, name),
+                    () -> {
+                        // Screen pinning would block the system installer
+                        // dialog — stop pinning first (non-owner only).
+                        if (kioskActive && !KioskManager.isDeviceOwner(MainActivity.this)) {
+                            KioskManager.stopKiosk(MainActivity.this);
+                            kioskActive = false;
+                        }
+                        SelfUpdater.downloadAndInstall(MainActivity.this, baseUrl, latest);
+                    });
+        });
     }
 
     private void clearAllSiteData() {

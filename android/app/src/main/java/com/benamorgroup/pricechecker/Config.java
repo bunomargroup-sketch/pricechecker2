@@ -53,6 +53,20 @@ public final class Config {
     };
 
     /**
+     * In-app APK self-update (admin menu → "تحديث تطبيق الأندرويد (APK)").
+     * build-apk.sh regenerates android/apk/latest.json on every build; the
+     * tablet reads it from the FIRST URL that responds.
+     *
+     * IMPORTANT: these URLs serve the MAIN branch of the repository — merge
+     * the working branch into main once, otherwise both return 404 and the
+     * in-app update check will report "cannot reach update info".
+     */
+    public static final String[] UPDATE_JSON_URLS = {
+            "https://raw.githubusercontent.com/bunomargroup-sketch/pricechecker2/main/android/apk/latest.json",
+            "https://bunomargroup-sketch.github.io/pricechecker2/android/apk/latest.json"
+    };
+
+    /**
      * Admin PIN used on the very first run.
      * CHANGE IT IMMEDIATELY from the admin menu after installing
      * (logo x7 -> PIN -> "تغيير رمز الإدارة").

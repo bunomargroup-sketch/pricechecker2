@@ -21,6 +21,12 @@
     <!-- Optional "start after reboot" feature (toggle in the admin menu) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- In-app APK self-update (admin menu): needed so Android can show the
+         "Install?" confirmation for the downloaded update APK in normal
+         (non-Device-Owner) mode. Device Owner installs are silent and do
+         not rely on this permission. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <!-- NOTE: no storage, camera, location or phone permissions are requested.
          Downloads (if the website ever adds them) go through the system
          DownloadManager, which needs no permission on Android 10+. -->

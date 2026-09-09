@@ -16,8 +16,8 @@
 # =============================================================================
 set -euo pipefail
 
-VERSION_NAME="1.0.1"
-VERSION_CODE="2"
+VERSION_NAME="1.0.2"
+VERSION_CODE="3"
 
 RELEASE_STORE_PASS="benamor-release-2024"
 RELEASE_KEY_PASS="benamor-release-2024"
@@ -195,6 +195,16 @@ main() {
   log "Signing debug APK"
   sign "$HERE/keystore/debug.keystore" androiddebugkey android \
        "$OUT/BenAmorPriceChecker-$VERSION_NAME-debug.apk"
+
+  log "Writing apk/latest.json (in-app self-update manifest)"
+  cat > "$OUT/latest.json" <<EOF
+{
+  "versionCode": $VERSION_CODE,
+  "versionName": "$VERSION_NAME",
+  "apk": "BenAmorPriceChecker-$VERSION_NAME-release.apk"
+}
+EOF
+  cat "$OUT/latest.json"
 
   log "Verifying"
   "$JDK/bin/java" -cp "$APKSIGNER_JAR" com.android.apksigner.ApkSignerTool \
